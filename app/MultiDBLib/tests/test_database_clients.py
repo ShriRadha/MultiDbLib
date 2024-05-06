@@ -1,12 +1,12 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from src.database.mongodb_client import MongoDBClient
-from src.database.mysql_client import MySQLClient
-from src.database.postgres_client import PostgresClient
+from app.MultiDBLib.src.database.mongodb_client import MongoDBClient
+from app.MultiDBLib.src.database.mysql_client import MySQLClient
+from app.MultiDBLib.src.database.postgres_client import PostgresClient
 
 class TestDatabaseClients(unittest.TestCase):
 
-    @patch('src.database.mongodb_client.MongoClient')
+    @patch('app.MultiDBLib.src.database.mongodb_client.MongoClient')
     def test_mongodb_connection(self, mock_mongo_client):
         # Testing MongoDB connection establishment
         mock_client_instance = MagicMock()
@@ -16,7 +16,7 @@ class TestDatabaseClients(unittest.TestCase):
         mock_mongo_client.assert_called_with('mongodb://user:password@localhost:27017')
         self.assertTrue(db_client.client is not None)
 
-    @patch('src.database.mysql_client.mysql.connector.connect')
+    @patch('app.MultiDBLib.src.database.mysql_client.mysql.connector.connect')
     def test_mysql_connection(self, mock_mysql_connect):
         # Testing MySQL client connection establishment
         mock_connection_instance = MagicMock()
@@ -26,7 +26,7 @@ class TestDatabaseClients(unittest.TestCase):
         mock_mysql_connect.assert_called_with(host='localhost', port=3306, user='user', password='password', database='testdb')
         self.assertTrue(db_client.connection is not None)
 
-    @patch('src.database.postgres_client.psycopg2.connect')
+    @patch('app.MultiDBLib.src.database.postgres_client.psycopg2.connect')
     def test_postgres_connection(self, mock_psycopg2_connect):
         # Testing PostgreSQL client connection establishment
         mock_connection_instance = MagicMock()
@@ -38,21 +38,21 @@ class TestDatabaseClients(unittest.TestCase):
 
     def test_execute_query_mongodb(self):
         # Testing execute_query for MongoDB
-        with patch('src.database.mongodb_client.MongoDBClient.execute_query') as mock_execute:
+        with patch('app.MultiDBLib.src.database.mongodb_client.MongoDBClient.execute_query') as mock_execute:
             db_client = MongoDBClient('localhost', 27017, 'user', 'password', 'testdb')
             db_client.execute_query({'find': 'test_collection'})
             mock_execute.assert_called_once()
 
     def test_execute_query_mysql(self):
         # Testing execute_query for MySQL
-        with patch('src.database.mysql_client.MySQLClient.execute_query') as mock_execute:
+        with patch('app.MultiDBLib.src.database.mysql_client.MySQLClient.execute_query') as mock_execute:
             db_client = MySQLClient('localhost', 3306, 'user', 'password', 'testdb')
             db_client.execute_query("SELECT * FROM test_table")
             mock_execute.assert_called_once()
 
     def test_execute_query_postgres(self):
         # Testing execute_query for PostgreSQL
-        with patch('src.database.postgres_client.PostgresClient.execute_query') as mock_execute:
+        with patch('app.MultiDBLib.src.database.postgres_client.PostgresClient.execute_query') as mock_execute:
             db_client = PostgresClient('localhost', 5432, 'user', 'password', 'testdb')
             db_client.execute_query("SELECT * FROM test_table")
             mock_execute.assert_called_once()

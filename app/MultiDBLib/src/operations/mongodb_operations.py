@@ -1,6 +1,4 @@
-from src.database.mongodb_client import MongoDBClient
-
-def insert_document(db_client, collection, document):
+def insert_data(db_client, collection, document):
     """
     Inserts a single document into a MongoDB collection.
     
@@ -16,7 +14,7 @@ def insert_document(db_client, collection, document):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def find_document(db_client, collection, query):
+def fetch_data(db_client, collection, query):
     """
     Finds documents in a MongoDB collection based on a query.
     
@@ -33,7 +31,7 @@ def find_document(db_client, collection, query):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def update_document(db_client, collection, query, new_values):
+def update_data(db_client, collection, query, new_values):
     """
     Updates documents in a MongoDB collection based on a query.
     
@@ -50,7 +48,7 @@ def update_document(db_client, collection, query, new_values):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def delete_document(db_client, collection, query):
+def delete_data(db_client, collection, query):
     """
     Deletes documents from a MongoDB collection based on a query.
     
