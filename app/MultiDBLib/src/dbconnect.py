@@ -1,7 +1,8 @@
-
-
-class DBConnect():
+from .database.db import Database
+class DBConnect:
     def __init__(self, db):
+        if not isinstance(db, Database):
+            raise ValueError("db must be an instance of a class that implements the DatabaseClient interface")
         self.db = db
 
     def connect(self):
@@ -24,4 +25,3 @@ class DBConnect():
     
     def delete_data(self, query):
         return self.db.delete_data(query)
-    

@@ -19,10 +19,17 @@ class Database(ABC):
         pass
 
     @abstractmethod
-    def execute_query(self, query):
-        """
-        Execute a database query.
-        :param query: The query string to be executed.
-        :return: The result of the query execution.
-        """
+    def insert_data(self, data):
+        pass
+
+    @abstractmethod
+    def fetch_data(self, query):
+        pass
+
+    @abstractmethod
+    def update_data(self, query, data):
+        pass
+
+    @abstractmethod
+    def delete_data(self, query):
         pass
