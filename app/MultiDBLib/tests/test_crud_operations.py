@@ -10,7 +10,7 @@ def test_document():
 
 @pytest.fixture
 def mongo_client():
-    client = mongodb_ops(host="localhost", port=27017, username="user", password="pass", database="test_db")
+    client = mongodb_ops(host="localhost", port=27017, database="test_db", collection_name='test_collection')
     return client
 
 @pytest.fixture
@@ -18,90 +18,81 @@ def postgres_client():
     client = postgres_ops(host="localhost", port=5432, user="user", password="pass", database="test_db")
     return client
 
-
-# Tests for MongoDB operations
 @patch('app.MultiDBLib.src.database.mongodb_client.MongoClient')
 def test_insert_data_mongo(mock_mongo, mongo_client, test_document):
     mock_collection = MagicMock()
-    mongo_client.client = MagicMock()
-    mongo_client.client.db.__getitem__.return_value = mock_collection
-    mock_insert_one = MagicMock()
-    mock_insert_one.return_value.inserted_id = 'mock_id'
+    mock_mongo.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
+    mock_insert_one = MagicMock(return_value=MagicMock(inserted_id='mock_id'))
     mock_collection.insert_one = mock_insert_one
+    mongo_client.connect() 
 
-    inserted_id = mongo_client.insert_data('test_collection', test_document)
+    inserted_id = mongo_client.insert_data(test_document)
+
     assert inserted_id == 'mock_id'
 
 @patch('app.MultiDBLib.src.database.mongodb_client.MongoClient')
 def test_fetch_data_mongo(mock_mongo, mongo_client, test_document):
     mock_collection = MagicMock()
-    mongo_client.client = MagicMock()
-    mongo_client.client.db.__getitem__.return_value = mock_collection
-    mock_find = MagicMock()
-    mock_find.return_value = [test_document]
-    mock_collection.find = mock_find
+    mock_mongo.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
+    mock_collection.find.return_value = [test_document]
+    mongo_client.connect()
 
-    found_documents = mongo_client.fetch_data('test_collection', {"name": "Test Document"})
+    found_documents = mongo_client.fetch_data({"name": "Test Document"})
     assert found_documents == [test_document]
 
 @patch('app.MultiDBLib.src.database.mongodb_client.MongoClient')
 def test_update_data_mongo(mock_mongo, mongo_client):
     mock_collection = MagicMock()
-    mongo_client.client = MagicMock()
-    mongo_client.client.db.__getitem__.return_value = mock_collection
-    mock_update_many = MagicMock()
-    mock_update_many.return_value.modified_count = 1
+    mock_mongo.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
+    mock_update_many = MagicMock(return_value=MagicMock(modified_count=1))
     mock_collection.update_many = mock_update_many
+    mongo_client.connect()
 
-    updated_count = mongo_client.update_data('test_collection', {"name": "Test Document"}, {"value": 456})
+    updated_count = mongo_client.update_data({"name": "Test Document"}, {"value": 456})
     assert updated_count == 1
 
 @patch('app.MultiDBLib.src.database.mongodb_client.MongoClient')
 def test_delete_data_mongo(mock_mongo, mongo_client):
     mock_collection = MagicMock()
-    mongo_client.client = MagicMock()
-    mongo_client.client.db.__getitem__.return_value = mock_collection
-    mock_delete_many = MagicMock()
-    mock_delete_many.return_value.deleted_count = 1
+    mock_mongo.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
+    mock_delete_many = MagicMock(return_value=MagicMock(deleted_count=1))
     mock_collection.delete_many = mock_delete_many
+    mongo_client.connect()
 
-    deleted_count = mongo_client.delete_data('test_collection', {"name": "Test Document"})
+    deleted_count = mongo_client.delete_data({"name": "Test Document"})
     assert deleted_count == 1
+
 
 @patch('app.MultiDBLib.src.database.mongodb_client.MongoClient')
 def test_fetch_data_not_in_db_mongo(mock_mongo, mongo_client):
     mock_collection = MagicMock()
-    mongo_client.client = MagicMock()
-    mongo_client.client.db.__getitem__.return_value = mock_collection
-    mock_find = MagicMock()
-    mock_find.return_value = []  # No documents found
-    mock_collection.find = mock_find
+    mock_mongo.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
+    mock_collection.find.return_value = []  # No documents found
+    mongo_client.connect()
 
-    found_documents = mongo_client.fetch_data('test_collection', {"name": "Nonexistent Document"})
-    assert len(found_documents) == 0  # Expecting an empty list since no documents match
+    found_documents = mongo_client.fetch_data({"name": "Nonexistent Document"})
+    assert found_documents == []  # Expecting an empty list since no documents match
 
 @patch('app.MultiDBLib.src.database.mongodb_client.MongoClient')
 def test_update_data_not_in_db_mongo(mock_mongo, mongo_client):
     mock_collection = MagicMock()
-    mongo_client.client = MagicMock()
-    mongo_client.client.db.__getitem__.return_value = mock_collection
-    mock_update_many = MagicMock()
-    mock_update_many.return_value.modified_count = 0  # No documents updated
+    mock_mongo.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
+    mock_update_many = MagicMock(return_value=MagicMock(modified_count=0))  # No documents updated
     mock_collection.update_many = mock_update_many
+    mongo_client.connect()
 
-    updated_count = mongo_client.update_data('test_collection', {"name": "Nonexistent Document"}, {"value": 999})
+    updated_count = mongo_client.update_data({"name": "Nonexistent Document"}, {"value": 999})
     assert updated_count == 0  # Expecting zero since no documents were updated
 
 @patch('app.MultiDBLib.src.database.mongodb_client.MongoClient')
 def test_delete_data_not_in_db_mongo(mock_mongo, mongo_client):
     mock_collection = MagicMock()
-    mongo_client.client = MagicMock()
-    mongo_client.client.db.__getitem__.return_value = mock_collection
-    mock_delete_many = MagicMock()
-    mock_delete_many.return_value.deleted_count = 0  # No documents deleted
+    mock_mongo.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
+    mock_delete_many = MagicMock(return_value=MagicMock(deleted_count=0))  # No documents deleted
     mock_collection.delete_many = mock_delete_many
+    mongo_client.connect()
 
-    deleted_count = mongo_client.delete_data('test_collection', {"name": "Nonexistent Document"})
+    deleted_count = mongo_client.delete_data({"name": "Nonexistent Document"})
     assert deleted_count == 0  # Expecting zero since no documents were deleted
 
 
@@ -205,6 +196,9 @@ def test_delete_data_not_in_db_postgres(mock_connect):
     assert row_count == 0  # Expecting zero since no documents were deleted
     mock_connect.assert_called_once()
     mock_connection.close.assert_called_once()
+
+
+
 
 
 

@@ -10,9 +10,6 @@ class DBConnect:
 
     def close(self):
         self.db.close()
-
-    def execute_query(self, query):
-        return self.db.execute_query(query)
     
     def insert_data(self, data):
         return self.db.insert_data(data)

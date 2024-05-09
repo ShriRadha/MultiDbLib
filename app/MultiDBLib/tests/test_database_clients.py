@@ -11,7 +11,7 @@ class TestDatabaseClients(unittest.TestCase):
         # Testing MongoDB connection establishment
         mock_client_instance = MagicMock()
         mock_mongo_client.return_value = mock_client_instance
-        db_client = MongoDBClient('localhost', 27017, 'user', 'password', 'testdb')
+        db_client = MongoDBClient('localhost', 27017, 'user', 'password', 'testdb', 'testcollection')
         db_client.connect()
         mock_mongo_client.assert_called_with('mongodb://user:password@localhost:27017')
         self.assertTrue(db_client.client is not None)
@@ -33,13 +33,14 @@ class TestDatabaseClients(unittest.TestCase):
         mock_psycopg2_connect.return_value = mock_connection_instance
         db_client = PostgresClient('localhost', 5432, 'user', 'password', 'testdb')
         db_client.connect()
-        mock_psycopg2_connect.assert_called_with(host='localhost', port=5432, user='user', password='password', database='testdb')
-        self.assertTrue(db_client.connection is not None)
+        mock_psycopg2_connect.assert_called_with("host=localhost port=5432 user=user password=password dbname=testdb")
+        self.assertIsNotNone(db_client.connection)
+
 
     def test_close_connection_mongodb(self):
         # Testing close method for MongoDB
         with patch.object(MongoDBClient, 'close', return_value=None) as mock_close:
-            db_client = MongoDBClient('localhost', 27017, 'user', 'password', 'testdb')
+            db_client = MongoDBClient('localhost', 27017, 'user', 'password', 'testdb', 'testcollection')
             db_client.close()
             mock_close.assert_called_once()
 
