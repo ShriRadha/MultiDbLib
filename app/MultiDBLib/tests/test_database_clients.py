@@ -11,9 +11,9 @@ class TestDatabaseClients(unittest.TestCase):
         # Testing MongoDB connection establishment
         mock_client_instance = MagicMock()
         mock_mongo_client.return_value = mock_client_instance
-        db_client = MongoDBClient('localhost', 27017, 'user', 'password', 'testdb', 'testcollection')
+        db_client = MongoDBClient('localhost', 27017, 'testdb', 'testcollection')
         db_client.connect()
-        mock_mongo_client.assert_called_with('mongodb://user:password@localhost:27017')
+        mock_mongo_client.assert_called_with('localhost', 27017)
         self.assertTrue(db_client.client is not None)
 
     @patch('app.MultiDBLib.src.database.mysql_client.mysql.connector.connect')
@@ -40,7 +40,7 @@ class TestDatabaseClients(unittest.TestCase):
     def test_close_connection_mongodb(self):
         # Testing close method for MongoDB
         with patch.object(MongoDBClient, 'close', return_value=None) as mock_close:
-            db_client = MongoDBClient('localhost', 27017, 'user', 'password', 'testdb', 'testcollection')
+            db_client = MongoDBClient('localhost', 27017, 'testdb', 'testcollection')
             db_client.close()
             mock_close.assert_called_once()
 
