@@ -54,6 +54,10 @@ class MySQLClient(Database):
     def insert_data(self, query, params=None):
         """
         Inserts data into a MySQL database.
+        
+        :param query: str, the SQL query string to execute for inserting data.
+        :param params: tuple or None, parameters for the SQL query to prevent SQL injection.
+        :return: int, the number of rows affected.
         """
         try:
             self.connect()
@@ -72,6 +76,10 @@ class MySQLClient(Database):
     def fetch_data(self, query, params=None):
         """
         Fetches data from a MySQL database.
+        
+        :param query: str, the SQL query string to execute for fetching data.
+        :param params: tuple or None, parameters for the SQL query to ensure safe queries.
+        :return: list of tuple, the rows fetched from the database.
         """
         try:
             self.connect()
@@ -89,6 +97,10 @@ class MySQLClient(Database):
     def update_data(self, query, params=None):
         """
         Updates data in a MySQL database.
+        
+        :param query: str, the SQL query string to execute for updating data.
+        :param params: tuple or None, parameters for the SQL query to prevent SQL injection.
+        :return: int, the number of rows affected.
         """
         try:
             self.connect()
@@ -107,6 +119,10 @@ class MySQLClient(Database):
     def delete_data(self, query, params=None):
         """
         Deletes data from a MySQL database.
+        
+        :param query: str, the SQL query string to execute for deleting data.
+        :param params: tuple or None, parameters for the SQL query to ensure safe deletion.
+        :return: int, the number of rows affected.
         """
         try:
             self.connect()

@@ -1,5 +1,5 @@
 import mysql.connector
-from app.MultiDBLib.src.exceptions import ConnectionError, QueryError
+from app.MultiDBLib.src.exceptions import *
 from .db import Database
 import logging
 
@@ -62,9 +62,9 @@ class MySQLClient(Database):
             self.connection.commit()
             row_count = cursor.rowcount
             return row_count
-        except mysql.connector.Error as e:
+        except InsertionError as e:
             logger.error(f"Failed to execute insert query: {e}")
-            raise QueryError(f"Failed to execute insert query: {e}")
+            raise InsertionError(f"Failed to execute insert query: {e}")
         finally:
             cursor.close()
             self.close()
@@ -79,9 +79,9 @@ class MySQLClient(Database):
             cursor.execute(query, params)
             rows = cursor.fetchall()
             return rows
-        except mysql.connector.Error as e:
+        except FetchError as e:
             logger.error(f"Failed to execute fetch query: {e}")
-            raise QueryError(f"Failed to execute fetch query: {e}")
+            raise FetchError(f"Failed to execute fetch query: {e}")
         finally:
             cursor.close()
             self.close()
@@ -97,9 +97,9 @@ class MySQLClient(Database):
             self.connection.commit()
             row_count = cursor.rowcount
             return row_count
-        except mysql.connector.Error as e:
+        except UpdateError as e:
             logger.error(f"Failed to execute update query: {e}")
-            raise QueryError(f"Failed to execute update query: {e}")
+            raise UpdateError(f"Failed to execute update query: {e}")
         finally:
             cursor.close()
             self.close()
@@ -115,9 +115,9 @@ class MySQLClient(Database):
             self.connection.commit()
             row_count = cursor.rowcount
             return row_count
-        except mysql.connector.Error as e:
+        except DeletionError as e:
             logger.error(f"Failed to execute delete query: {e}")
-            raise QueryError(f"Failed to execute delete query: {e}")
+            raise DeletionError(f"Failed to execute delete query: {e}")
         finally:
             cursor.close()
             self.close()

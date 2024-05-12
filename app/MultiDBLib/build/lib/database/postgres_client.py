@@ -1,5 +1,5 @@
 import psycopg2
-from app.MultiDBLib.src.exceptions import ConnectionError, QueryError
+from app.MultiDBLib.src.exceptions import *
 from .db import Database
 import logging
 
@@ -53,6 +53,9 @@ class PostgresClient(Database):
             row_count = cursor.rowcount
             cursor.close()
             return row_count
+        except InsertionError as e:
+            logger.error(f"Error inserting data: {e}")
+            raise InsertionError(f"Error inserting data: {e}")
         finally:
             self.close()
 
@@ -71,6 +74,9 @@ class PostgresClient(Database):
             rows = cursor.fetchall()
             cursor.close()
             return rows
+        except FetchError as e:
+            logger.error(f"Error fetching data: {e}")
+            raise FetchError(f"Error fetching data: {e}")
         finally:
             self.close()
 
@@ -90,6 +96,9 @@ class PostgresClient(Database):
             row_count = cursor.rowcount
             cursor.close()
             return row_count
+        except UpdateError as e:
+            logger.error(f"Error updating data: {e}")
+            raise UpdateError(f"Error updating data: {e}")
         finally:
             self.close()
 
@@ -109,5 +118,8 @@ class PostgresClient(Database):
             row_count = cursor.rowcount
             cursor.close()
             return row_count
+        except DeletionError as e:
+            logger.error(f"Error deleting data: {e}")
+            raise DeletionError(f"Error deleting data: {e}")
         finally:
             self.close()
