@@ -2,8 +2,7 @@ from abc import ABC, abstractmethod
 import logging
 
 # Configure logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class Database(ABC):
     """Abstract base class defining the interface for database operations."""
@@ -32,4 +31,8 @@ class Database(ABC):
 
     @abstractmethod
     def delete_data(self, query):
+        pass
+
+    @abstractmethod
+    def delete_all_data(self):
         pass

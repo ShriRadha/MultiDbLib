@@ -3,9 +3,10 @@ from app.MultiDBLib.src.exceptions import *
 from .db import Database
 import logging
 
+
 # Configure logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('pymongo')
+logger.setLevel(logging.INFO)
 
 class MongoDBClient(Database):
     """
@@ -61,7 +62,7 @@ class MongoDBClient(Database):
         """
         try:
             result = self.collection.insert_one(document)
-            logger.info(f"Document inserted with id: {result.inserted_id}")
+            logger.info(f"Inserted document with ID: {result.inserted_id}")
             return result.inserted_id
         except InsertionError as e:
             logger.error(f"Error inserting data: {e}")
@@ -77,7 +78,7 @@ class MongoDBClient(Database):
         try:
             results = self.collection.find(query)
             documents = [doc for doc in results]
-            logger.info(f"Found {len(documents)} documents")
+            logger.info(f"Found {documents}")
             return documents
         except FetchError as e:
             logger.error(f"Error fetching data: {e}")
@@ -110,6 +111,19 @@ class MongoDBClient(Database):
         try:
             result = self.collection.delete_many(query)
             logger.info(f"Documents deleted: {result.deleted_count}")
+            return result.deleted_count
+        except DeletionError as e:
+            logger.error(f"Error deleting data: {e}")
+            raise DeletionError(f"Error deleting data: {e}")
+    
+    def delete_all_data(self, query):
+        """
+        Deletes all documents from the MongoDB collection.
+        :return: The count of documents deleted.
+        """
+        try:
+            result = self.collection.delete_many({})
+            logger.info(f"All documents deleted: {result.deleted_count}")
             return result.deleted_count
         except DeletionError as e:
             logger.error(f"Error deleting data: {e}")

@@ -15,5 +15,3 @@ def config(filename = file, section = "postgresql"):
         raise Exception(f"Section {section} not found in the {filename} file")
 
     return db
-
-print(config())

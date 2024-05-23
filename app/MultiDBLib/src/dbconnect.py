@@ -17,8 +17,11 @@ class DBConnect:
     def fetch_data(self, query):
         return self.db.fetch_data(query)
     
-    def update_data(self, query, data):
+    def update_data(self, query, data=None):
         return self.db.update_data(query, data)
     
     def delete_data(self, query):
         return self.db.delete_data(query)
+
+    def delete_all_data(self, query):
+        return self.db.delete_all_data(query)

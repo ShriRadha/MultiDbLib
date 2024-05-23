@@ -22,3 +22,7 @@ class DeletionError(DatabaseError):
     """Exception raised for errors that occur during a query execution."""
     pass
 
+class OperationalError(DatabaseError):
+    """Exception raised for errors that occur during a query execution."""
+    pass
+
