@@ -41,22 +41,22 @@ from config import config
 
 
 
-# mssql_client = MSSQLClient("localhost", 1433, "SA", "testPWD123!", "testdbms", 'ODBC Driver 17 for SQL Server')    
+mssql_client = MSSQLClient("localhost", 1433, "SA", "testPWD123!", "testdbms", 'ODBC Driver 17 for SQL Server')    
 
-# db_mssql = DBConnect(mssql_client)
+db_mssql = DBConnect(mssql_client)
 
-# db_mssql.connect()
+db_mssql.connect()
 
-# db_mssql.insert_data("INSERT INTO testtable (name, age) VALUES ('Shri', 20)")
+db_mssql.insert_data("INSERT INTO testtable (name, age) VALUES ('Shri', 20)")
 
-# db_mssql.fetch_data("SELECT * FROM testtable")
+db_mssql.fetch_data("SELECT * FROM testtable")
 
-# db_mssql.update_data("UPDATE testtable SET age = 21 WHERE name = 'Shri'")
+db_mssql.update_data("UPDATE testtable SET age = 21 WHERE name = 'Shri'")
 
-# db_mssql.fetch_data("SELECT * FROM testtable")
+db_mssql.fetch_data("SELECT * FROM testtable")
 
-# db_mssql.delete_all_data("testtable")
+db_mssql.delete_all_data("testtable")
 
-# db_mssql.fetch_data("SELECT * FROM testtable")
+db_mssql.fetch_data("SELECT * FROM testtable")
 
-# db_mssql.close()
+db_mssql.close()
