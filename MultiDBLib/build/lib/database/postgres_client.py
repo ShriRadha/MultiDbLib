@@ -1,5 +1,5 @@
 import psycopg2
-from app.MultiDBLib.src.exceptions import *
+from .exceptions import *
 from .db import Database
 import logging
 
@@ -27,7 +27,7 @@ class PostgresClient(Database):
         if self.connection is None:
             try:
                 self.connection = psycopg2.connect(self.connection_string)
-                logger.info(f"Connected to PostgreSQL at {self.connection_string}")
+                logger.info(f"Connected to PostgreSQL")
             except ConnectionError as e:
                 logger.error(f"Failed to connect to PostgreSQL: {e}")
                 raise ConnectionError(f"Could not connect to PostgreSQL: {e}")
@@ -57,7 +57,6 @@ class PostgresClient(Database):
         :return: int, the number of rows affected.
         """
         try:
-            self.connect()
             cursor = self.connection.cursor()
             cursor.execute(query, params)
             self.connection.commit()
@@ -68,8 +67,7 @@ class PostgresClient(Database):
         except InsertionError as e:
             logger.error(f"Error inserting data: {e}")
             raise InsertionError(f"Error inserting data: {e}")
-        finally:
-            self.close()
+
 
     def fetch_data(self, query, params=None):
         """
@@ -80,18 +78,17 @@ class PostgresClient(Database):
         :return: list of tuple, the rows fetched from the database.
         """
         try:
-            self.connect()
+
             cursor = self.connection.cursor()
             cursor.execute(query, params)
             rows = cursor.fetchall()
             cursor.close()
-            logger.info(f"Fetched {len(rows)} rows from the database.")
+            logger.info(rows)
             return rows
         except FetchError as e:
             logger.error(f"Error fetching data: {e}")
             raise FetchError(f"Error fetching data: {e}")
-        finally:
-            self.close()
+
 
     def update_data(self, query, params=None):
         """
@@ -102,7 +99,7 @@ class PostgresClient(Database):
         :return: int, the number of rows affected.
         """
         try:
-            self.connect()
+
             cursor = self.connection.cursor()
             cursor.execute(query, params)
             self.connection.commit()
@@ -113,8 +110,7 @@ class PostgresClient(Database):
         except UpdateError as e:
             logger.error(f"Error updating data: {e}")
             raise UpdateError(f"Error updating data: {e}")
-        finally:
-            self.close()
+
 
     def delete_data(self, query, params=None):
         """
@@ -125,7 +121,7 @@ class PostgresClient(Database):
         :return: int, the number of rows affected.
         """
         try:
-            self.connect()
+
             cursor = self.connection.cursor()
             cursor.execute(query, params)
             self.connection.commit()
@@ -136,8 +132,7 @@ class PostgresClient(Database):
         except DeletionError as e:
             logger.error(f"Error deleting data: {e}")
             raise DeletionError(f"Error deleting data: {e}")
-        finally:
-            self.close()
+
     
     def delete_all_data(self, query):
         """
@@ -146,7 +141,7 @@ class PostgresClient(Database):
         :return: int, the number of rows affected.
         """
         try:
-            self.connect()
+
             cursor = self.connection.cursor()
             cursor.execute(f"DELETE FROM {query}")
             self.connection.commit()
@@ -157,5 +152,4 @@ class PostgresClient(Database):
         except DeletionError as e:
             logger.error(f"Error deleting data: {e}")
             raise DeletionError(f"Error deleting data: {e}")
-        finally:
-            self.close()
+

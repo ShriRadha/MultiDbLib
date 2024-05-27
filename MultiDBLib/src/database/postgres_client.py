@@ -1,5 +1,5 @@
 import psycopg2
-from app.MultiDBLib.src.exceptions import *
+from .exceptions import *
 from .db import Database
 import logging
 

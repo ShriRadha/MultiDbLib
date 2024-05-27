@@ -1,4 +1,4 @@
-from .database.db import Database
+from .db import Database
 class DBConnect:
     def __init__(self, db):
         if not isinstance(db, Database):

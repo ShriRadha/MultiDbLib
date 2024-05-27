@@ -5,6 +5,7 @@ Summary: A simple database interaction library for MongoDB, PostgreSQL, and MySQ
 Home-page: UNKNOWN
 License: UNKNOWN
 Platform: UNKNOWN
+Requires-Python: >=3.6
 
 UNKNOWN
 

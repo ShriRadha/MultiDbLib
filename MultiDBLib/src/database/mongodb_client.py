@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from app.MultiDBLib.src.exceptions import *
+from .exceptions import *
 from .db import Database
 import logging
 

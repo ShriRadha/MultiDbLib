@@ -1,3 +1,5 @@
+pyproject.toml
+setup.cfg
 setup.py
 src/MultiDBLib.egg-info/PKG-INFO
 src/MultiDBLib.egg-info/SOURCES.txt
@@ -6,6 +8,10 @@ src/MultiDBLib.egg-info/requires.txt
 src/MultiDBLib.egg-info/top_level.txt
 src/database/__init__.py
 src/database/db.py
+src/database/dbconnect.py
+src/database/exceptions.py
 src/database/mongodb_client.py
-src/database/mysql_client.py
+src/database/mssql_client.py
 src/database/postgres_client.py
+tests/test_crud_operations.py
+tests/test_database_clients.py

@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from app.MultiDBLib.src.exceptions import *
+from .exceptions import *
 from .db import Database
 import logging
 
@@ -78,7 +78,7 @@ class MongoDBClient(Database):
         try:
             results = self.collection.find(query)
             documents = [doc for doc in results]
-            logger.info(f"Found {documents}")
+            logger.info(documents)
             return documents
         except FetchError as e:
             logger.error(f"Error fetching data: {e}")
@@ -116,7 +116,7 @@ class MongoDBClient(Database):
             logger.error(f"Error deleting data: {e}")
             raise DeletionError(f"Error deleting data: {e}")
     
-    def delete_all_data(self, query):
+    def delete_all_data(self, query=None):
         """
         Deletes all documents from the MongoDB collection.
         :return: The count of documents deleted.

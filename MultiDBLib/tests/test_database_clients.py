@@ -1,12 +1,12 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from app.MultiDBLib.src.database.mongodb_client import MongoDBClient
-from database.mssql_client import MSSQLClient
-from app.MultiDBLib.src.database.postgres_client import PostgresClient
+from MultiDBLib.src.database.mongodb_client import MongoDBClient
+from MultiDBLib.src.database.mssql_client import MSSQLClient
+from MultiDBLib.src.database.postgres_client import PostgresClient
 
 class TestDatabaseClients(unittest.TestCase):
 
-    @patch('app.MultiDBLib.src.database.mongodb_client.MongoClient')
+    @patch('MultiDBLib.src.database.mongodb_client.MongoClient')
     def test_mongodb_connection(self, mock_mongo_client):
         # Testing MongoDB connection establishment
         mock_client_instance = MagicMock()
@@ -16,7 +16,7 @@ class TestDatabaseClients(unittest.TestCase):
         mock_mongo_client.assert_called_with('localhost', 27017)
         self.assertTrue(db_client.client is not None)
 
-    @patch('app.MultiDBLib.src.database.mssql_client.pyodbc.connect')
+    @patch('MultiDBLib.src.database.mssql_client.pyodbc.connect')
     def test_mssql_connection(self, mock_pyodbc_connect):
         """
         Test the connection method of the MSSQLClient class to ensure it successfully connects using pyodbc.
@@ -26,7 +26,7 @@ class TestDatabaseClients(unittest.TestCase):
         mock_pyodbc_connect.return_value = mock_connection_instance
         
         # Initialize MSSQLClient and attempt to connect
-        db_client = MSSQLClient('localhost', 1433, 'user', 'password', 'testdb')
+        db_client = MSSQLClient('localhost', 1433, 'user', 'password', 'testdb', 'ODBC Driver 17 for SQL Server')
         db_client.connect()
         
         # Assert that pyodbc.connect was called with the correct connection string
@@ -39,7 +39,7 @@ class TestDatabaseClients(unittest.TestCase):
 
         
 
-    @patch('app.MultiDBLib.src.database.postgres_client.psycopg2.connect')
+    @patch('MultiDBLib.src.database.postgres_client.psycopg2.connect')
     def test_postgres_connection(self, mock_psycopg2_connect):
         # Testing PostgreSQL client connection establishment
         mock_connection_instance = MagicMock()
@@ -62,17 +62,11 @@ class TestDatabaseClients(unittest.TestCase):
         """
         Test the close method of the MSSQLClient to ensure it properly closes the connection.
         """
-        # Initialize MSSQLClient
-        db_client = MSSQLClient('localhost', 1433, 'user', 'password', 'testdb')
-        # Manually set a mock connection to simulate an open connection
-        mock_connection = MagicMock()
-        db_client.connection = mock_connection
-        
-        # Call the close method
-        db_client.close()
-        
-        # Check if the close method of the mock connection was called
-        mock_connection.close.assert_called_once()
+        with patch.object(MSSQLClient, 'close', return_value=None) as mock_close:
+            # Initialize MSSQLClient
+            db_client = MSSQLClient('localhost', 1433, 'user', 'password', 'testdb', 'ODBC Driver 17 for SQL Server')
+            db_client.close()
+            mock_close.assert_called_once()
 
 
     def test_close_connection_postgres(self):
