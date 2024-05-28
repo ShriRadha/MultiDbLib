@@ -1,8 +1,8 @@
 import pytest
 from unittest.mock import patch, MagicMock
-from MultiDBLib.src.database.mongodb_client import MongoDBClient as mongodb_ops
-from MultiDBLib.src.database.postgres_client import PostgresClient as postgres_ops
-from MultiDBLib.src.database.mssql_client import MSSQLClient as mssql_ops
+from MultiDBLib.src.databaseconnector.mongodb_client import MongoDBClient as mongodb_ops
+from MultiDBLib.src.databaseconnector.postgres_client import PostgresClient as postgres_ops
+from MultiDBLib.src.databaseconnector.mssql_client import MSSQLClient as mssql_ops
 
 @pytest.fixture
 def test_document():
@@ -18,7 +18,7 @@ def postgres_client():
     client = postgres_ops(host="localhost", port=5432, user="user", password="pass", database="test_db")
     return client
 
-@patch('MultiDBLib.src.database.mongodb_client.MongoClient')
+@patch('MultiDBLib.src.databaseconnector.mongodb_client.MongoClient')
 def test_insert_data_mongo(mock_mongo, mongo_client, test_document):
     mock_collection = MagicMock()
     mock_mongo.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
@@ -30,7 +30,7 @@ def test_insert_data_mongo(mock_mongo, mongo_client, test_document):
 
     assert inserted_id == 'mock_id'
 
-@patch('MultiDBLib.src.database.mongodb_client.MongoClient')
+@patch('MultiDBLib.src.databaseconnector.mongodb_client.MongoClient')
 def test_fetch_data_mongo(mock_mongo, mongo_client, test_document):
     mock_collection = MagicMock()
     mock_mongo.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
@@ -40,7 +40,7 @@ def test_fetch_data_mongo(mock_mongo, mongo_client, test_document):
     found_documents = mongo_client.fetch_data({"name": "Test Document"})
     assert found_documents == [test_document]
 
-@patch('MultiDBLib.src.database.mongodb_client.MongoClient')
+@patch('MultiDBLib.src.databaseconnector.mongodb_client.MongoClient')
 def test_update_data_mongo(mock_mongo, mongo_client):
     mock_collection = MagicMock()
     mock_mongo.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
@@ -51,7 +51,7 @@ def test_update_data_mongo(mock_mongo, mongo_client):
     updated_count = mongo_client.update_data({"name": "Test Document"}, {"value": 456})
     assert updated_count == 1
 
-@patch('MultiDBLib.src.database.mongodb_client.MongoClient')
+@patch('MultiDBLib.src.databaseconnector.mongodb_client.MongoClient')
 def test_delete_data_mongo(mock_mongo, mongo_client):
     mock_collection = MagicMock()
     mock_mongo.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
@@ -63,7 +63,7 @@ def test_delete_data_mongo(mock_mongo, mongo_client):
     assert deleted_count == 1
 
 
-@patch('MultiDBLib.src.database.mongodb_client.MongoClient')
+@patch('MultiDBLib.src.databaseconnector.mongodb_client.MongoClient')
 def test_fetch_data_not_in_db_mongo(mock_mongo, mongo_client):
     mock_collection = MagicMock()
     mock_mongo.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
@@ -73,7 +73,7 @@ def test_fetch_data_not_in_db_mongo(mock_mongo, mongo_client):
     found_documents = mongo_client.fetch_data({"name": "Nonexistent Document"})
     assert found_documents == []  # Expecting an empty list since no documents match
 
-@patch('MultiDBLib.src.database.mongodb_client.MongoClient')
+@patch('MultiDBLib.src.databaseconnector.mongodb_client.MongoClient')
 def test_update_data_not_in_db_mongo(mock_mongo, mongo_client):
     mock_collection = MagicMock()
     mock_mongo.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
@@ -84,7 +84,7 @@ def test_update_data_not_in_db_mongo(mock_mongo, mongo_client):
     updated_count = mongo_client.update_data({"name": "Nonexistent Document"}, {"value": 999})
     assert updated_count == 0  # Expecting zero since no documents were updated
 
-@patch('MultiDBLib.src.database.mongodb_client.MongoClient')
+@patch('MultiDBLib.src.databaseconnector.mongodb_client.MongoClient')
 def test_delete_data_not_in_db_mongo(mock_mongo, mongo_client):
     mock_collection = MagicMock()
     mock_mongo.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
@@ -96,7 +96,7 @@ def test_delete_data_not_in_db_mongo(mock_mongo, mongo_client):
     assert deleted_count == 0  # Expecting zero since no documents were deleted
 
 
-@patch('MultiDBLib.src.database.mongodb_client.MongoClient')
+@patch('MultiDBLib.src.databaseconnector.mongodb_client.MongoClient')
 def test_delete_all_data_mongo(mock_mongo, mongo_client):
     mock_collection = MagicMock()
     mock_mongo.return_value.__getitem__.return_value.__getitem__.return_value = mock_collection
@@ -110,7 +110,7 @@ def test_delete_all_data_mongo(mock_mongo, mongo_client):
 
 
 
-@patch('MultiDBLib.src.database.postgres_client.psycopg2')
+@patch('MultiDBLib.src.databaseconnector.postgres_client.psycopg2')
 def test_insert_data_postgres(mock_psycopg2):
     # Create the client directly in the test
     # Create the PostgresClient directly in the test
@@ -135,7 +135,7 @@ def test_insert_data_postgres(mock_psycopg2):
         mock_cursor.close.assert_called_once()
         mock_connection.commit.assert_called_once()
 
-@patch('MultiDBLib.src.database.postgres_client.psycopg2')
+@patch('MultiDBLib.src.databaseconnector.postgres_client.psycopg2')
 def test_fetch_data_postgres(mock_psycopg2):
     # Create the PostgresClient directly in the test
         client = postgres_ops(host="localhost", port=5432, user="user", password="pass", database="test_db")
@@ -159,7 +159,7 @@ def test_fetch_data_postgres(mock_psycopg2):
         mock_cursor.fetchall.assert_called_once()
         mock_cursor.close.assert_called_once()
 
-@patch('MultiDBLib.src.database.postgres_client.psycopg2')
+@patch('MultiDBLib.src.databaseconnector.postgres_client.psycopg2')
 def test_update_data_postgres(mock_psycopg2):
     # Setup the PostgresClient
         client = postgres_ops(host="localhost", port=5432, user="user", password="pass", database="test_db")
@@ -184,7 +184,7 @@ def test_update_data_postgres(mock_psycopg2):
         mock_cursor.close.assert_called_once()
         mock_connection.close.assert_not_called()  # Verify that connection is not closed unless explicitly done so
 
-@patch('MultiDBLib.src.database.postgres_client.psycopg2')
+@patch('MultiDBLib.src.databaseconnector.postgres_client.psycopg2')
 def test_delete_data_postgres(mock_psycopg2):
 # Setup the PostgresClient
         client = postgres_ops(host="localhost", port=5432, user="user", password="pass", database="test_db")
@@ -210,7 +210,7 @@ def test_delete_data_postgres(mock_psycopg2):
         mock_connection.close.assert_not_called()  # Verify that connection is not closed unless explicitly done so
 
 
-@patch('MultiDBLib.src.database.postgres_client.psycopg2.connect')
+@patch('MultiDBLib.src.databaseconnector.postgres_client.psycopg2.connect')
 def test_fetch_data_not_in_db_postgres(mock_psycopg2):
     # Setup the PostgresClient
         # Create the PostgresClient directly in the test
@@ -235,7 +235,7 @@ def test_fetch_data_not_in_db_postgres(mock_psycopg2):
         mock_cursor.fetchall.assert_called_once()
         mock_cursor.close.assert_called_once()
 
-@patch('MultiDBLib.src.database.postgres_client.psycopg2.connect')
+@patch('MultiDBLib.src.databaseconnector.postgres_client.psycopg2.connect')
 def test_update_data_not_in_db_postgres(mock_connect):
     client = postgres_ops(host="localhost", port=5432, user="user", password="pass", database="test_db")
         
@@ -259,7 +259,7 @@ def test_update_data_not_in_db_postgres(mock_connect):
     mock_cursor.close.assert_called_once()
     mock_connection.close.assert_not_called()  # Verify that connection is not closed unless explicitly done so
 
-@patch('MultiDBLib.src.database.postgres_client.psycopg2.connect')
+@patch('MultiDBLib.src.databaseconnector.postgres_client.psycopg2.connect')
 def test_delete_data_not_in_db_postgres(mock_connect):
     # Setup the PostgresClient
         client = postgres_ops(host="localhost", port=5432, user="user", password="pass", database="test_db")
@@ -284,7 +284,7 @@ def test_delete_data_not_in_db_postgres(mock_connect):
         mock_cursor.close.assert_called_once()
         mock_connection.close.assert_not_called()  # Verify that connection is not closed unless explicitly done so
 
-@patch('MultiDBLib.src.database.postgres_client.psycopg2.connect')
+@patch('MultiDBLib.src.databaseconnector.postgres_client.psycopg2.connect')
 def test_delete_all_data_postgres(mock_connect):
     # Setup the PostgresClient
         client = postgres_ops(host="localhost", port=5432, user="user", password="pass", database="test_db")
@@ -311,7 +311,7 @@ def test_delete_all_data_postgres(mock_connect):
 
 
 
-@patch('MultiDBLib.src.database.mssql_client.pyodbc.connect')
+@patch('MultiDBLib.src.databaseconnector.mssql_client.pyodbc.connect')
 def test_insert_data_mssql(mock_pyodbc_connect):
 
 # Mock the connection and cursor
@@ -340,7 +340,7 @@ def test_insert_data_mssql(mock_pyodbc_connect):
         mock_connection.commit.assert_called_once()
 
 
-@patch('MultiDBLib.src.database.mssql_client.pyodbc.connect')
+@patch('MultiDBLib.src.databaseconnector.mssql_client.pyodbc.connect')
 def test_fetch_data_mssql(mock_pyodbc_connect):
 
         # Mock the connection and cursor
@@ -372,7 +372,7 @@ def test_fetch_data_mssql(mock_pyodbc_connect):
 
 
 
-@patch('MultiDBLib.src.database.mssql_client.pyodbc.connect')
+@patch('MultiDBLib.src.databaseconnector.mssql_client.pyodbc.connect')
 def test_update_data_mssql(mock_pyodbc_connect):
     # Mock the connection and cursor
         mock_connection = MagicMock()
@@ -401,7 +401,7 @@ def test_update_data_mssql(mock_pyodbc_connect):
         assert mock_cursor.__exit__.called, "Cursor was not closed by context manager"
 
 
-@patch('MultiDBLib.src.database.mssql_client.pyodbc.connect')
+@patch('MultiDBLib.src.databaseconnector.mssql_client.pyodbc.connect')
 def test_delete_data_mssql(mock_pyodbc_connect):
 # Mock the connection and cursor
         mock_connection = MagicMock()
@@ -430,7 +430,7 @@ def test_delete_data_mssql(mock_pyodbc_connect):
         assert mock_cursor.__exit__.called, "Cursor was not closed by context manager"
 
 
-@patch('MultiDBLib.src.database.mssql_client.pyodbc.connect')
+@patch('MultiDBLib.src.databaseconnector.mssql_client.pyodbc.connect')
 def test_delete_all_data_mssql(mock_pyodbc_connect):
 # Mock the connection and cursor
         mock_connection = MagicMock()
@@ -458,7 +458,7 @@ def test_delete_all_data_mssql(mock_pyodbc_connect):
 
 
 
-@patch('MultiDBLib.src.database.mssql_client.pyodbc.connect')
+@patch('MultiDBLib.src.databaseconnector.mssql_client.pyodbc.connect')
 def test_delete_data_not_in_mssql(mock_pyodbc_connect):
  # Setup mock connection and cursor
     mock_connection = MagicMock()
@@ -487,7 +487,7 @@ def test_delete_data_not_in_mssql(mock_pyodbc_connect):
     assert mock_cursor.__exit__.called, "Cursor was not closed by context manager"
 
 
-@patch('MultiDBLib.src.database.mssql_client.pyodbc.connect')
+@patch('MultiDBLib.src.databaseconnector.mssql_client.pyodbc.connect')
 def test_update_data_not_in_mssql( mock_pyodbc_connect):
 # Setup mock connection and cursor
         mock_connection = MagicMock()
@@ -514,7 +514,7 @@ def test_update_data_not_in_mssql( mock_pyodbc_connect):
         assert mock_cursor.__exit__.called, "Cursor was not closed by context manager"
 
 
-@patch('MultiDBLib.src.database.mssql_client.pyodbc.connect')
+@patch('MultiDBLib.src.databaseconnector.mssql_client.pyodbc.connect')
 def test_fetch_data_not_in_mssql(mock_pyodbc_connect):
     # Setup mock connection and cursor
         mock_connection = MagicMock()

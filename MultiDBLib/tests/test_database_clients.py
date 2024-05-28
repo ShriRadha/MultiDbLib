@@ -1,12 +1,12 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from MultiDBLib.src.database.mongodb_client import MongoDBClient
-from MultiDBLib.src.database.mssql_client import MSSQLClient
-from MultiDBLib.src.database.postgres_client import PostgresClient
+from MultiDBLib.src.databaseconnector.mongodb_client import MongoDBClient
+from MultiDBLib.src.databaseconnector.mssql_client import MSSQLClient
+from MultiDBLib.src.databaseconnector.postgres_client import PostgresClient
 
 class TestDatabaseClients(unittest.TestCase):
 
-    @patch('MultiDBLib.src.database.mongodb_client.MongoClient')
+    @patch('MultiDBLib.src.databaseconnector.mongodb_client.MongoClient')
     def test_mongodb_connection(self, mock_mongo_client):
         # Testing MongoDB connection establishment
         mock_client_instance = MagicMock()
@@ -16,7 +16,7 @@ class TestDatabaseClients(unittest.TestCase):
         mock_mongo_client.assert_called_with('localhost', 27017)
         self.assertTrue(db_client.client is not None)
 
-    @patch('MultiDBLib.src.database.mssql_client.pyodbc.connect')
+    @patch('MultiDBLib.src.databaseconnector.mssql_client.pyodbc.connect')
     def test_mssql_connection(self, mock_pyodbc_connect):
         """
         Test the connection method of the MSSQLClient class to ensure it successfully connects using pyodbc.
@@ -39,7 +39,7 @@ class TestDatabaseClients(unittest.TestCase):
 
         
 
-    @patch('MultiDBLib.src.database.postgres_client.psycopg2.connect')
+    @patch('MultiDBLib.src.databaseconnector.postgres_client.psycopg2.connect')
     def test_postgres_connection(self, mock_psycopg2_connect):
         # Testing PostgreSQL client connection establishment
         mock_connection_instance = MagicMock()
