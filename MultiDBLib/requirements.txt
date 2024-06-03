@@ -1,2 +1,5 @@
 setuptools
 wheel
+pymongo
+psycopg2
+pyodbc
