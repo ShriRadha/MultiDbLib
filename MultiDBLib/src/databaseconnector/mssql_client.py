@@ -50,8 +50,9 @@ class MSSQLClient(Database):
     def insert_data(self, query, params=None):
         """
         Inserts data into a database.
+        param: query: str, the SQL query to execute.
+        return: int, the number of rows inserted.
         """
-
 
         try:
             with self.connection.cursor() as cursor:
@@ -67,6 +68,8 @@ class MSSQLClient(Database):
     def fetch_data(self, query, params=None):
         """
         Fetches data from a database.
+        param: query: str, the SQL query to execute.
+        return: list, the fetched rows.
         """
         with self.connection.cursor() as cursor:
             try:
@@ -81,6 +84,8 @@ class MSSQLClient(Database):
     def update_data(self, query, params=None):
         """
         Updates data in a database.
+        param: query: str, the SQL query to execute.
+        return: int, the number of rows updated.
         """
 
         try:
@@ -98,6 +103,8 @@ class MSSQLClient(Database):
     def delete_data(self, query, params=None):
         """
         Deletes data from a database.
+        param: query: str, the SQL query to execute.
+        return: int, the number of rows deleted.
         """
 
         try:
@@ -116,6 +123,8 @@ class MSSQLClient(Database):
     def delete_all_data(self, table_name):
         """
         Deletes all data from a specified table.
+        param: table_name: str, the name of the table to delete all rows from.
+        return: int, the number of rows deleted.
         """
         try:
             with self.connection.cursor() as cursor:

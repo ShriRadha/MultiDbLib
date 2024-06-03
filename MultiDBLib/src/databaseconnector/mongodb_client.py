@@ -128,3 +128,10 @@ class MongoDBClient(Database):
         except DeletionError as e:
             logger.error(f"Error deleting data: {e}")
             raise DeletionError(f"Error deleting data: {e}")
+
+
+
+    def __str__(self):
+        return f"MongoDBClient(host={self.host}, port={self.port}, database={self.database}, collection={self.collection_name})"
+    
+        
